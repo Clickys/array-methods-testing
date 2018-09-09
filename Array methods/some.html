@@ -1,0 +1,190 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+  // Prototype function 
+
+  // function some( array, callback, optionalThis ) {
+  //   for ( let i = 0; i < array.length; i++ ) {
+  //     if ( callback( array[i], i, array ) ) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
+
+
+
+  // Function signature 
+  // some( array, function() {}, optionalThis );
+
+  // Function Parameters 
+
+  // An array => [] -> array 
+  // A callback function  -> callback
+  // Optional this -> optionalThis
+
+  // Callback Parameters 
+
+  // 1. element -> current element being processed
+  // 2. index -> index of the element being proccesed
+  // 3. array -> the array that filter was called
+
+  // Return value 
+
+  // true if the callback function returns a truthy value for any array element,  otherwise, false.
+
+
+  // Requirements 
+
+  // 1. It should run the callback for each element in the array. 
+  // 2. It should pass an array element into the callback function as the first argument.
+  // 3. It should pass the index of the array element being proccessed in the callback as the second argument.
+  // 4. It should pass the array of being proccessed in the callback as third argument.
+  // 5. It should run only on the array with assigned values and exclude holes.
+  // 6. If callback return true immediately exit some() and  return true.
+  // 7. If callback doesnt return true, run the callback for all the array elements and return false
+  // 8. It should have an optional this as third function argument.
+  // 9. If no optional this is provided undefined will be used as this value .
+  // 10. It should NOT change( mutate ) the array of being called upon.
+  // 11. If empty array is provided some() should return false.
+  // 12. It should call callbackfn only for elements of the array which actually exist,  not for missing elements of the array.
+  // 13. It should set the number of the elements to be processed before the first callback call, elements which are appended to the array after the call will not be visited by callbackfn.
+  // 14. If existing elements of the array are changed, their value as passed to callbackfn will be the value at the time every visits them.
+
+  function some(array, callback, optionalThis) {
+    let someFunction = callback;
+    let arrayLength = array.length;
+
+    if (optionalThis) {
+      someFunction = callback.bind(optionalThis);
+    }
+
+    for (let i = 0; i < arrayLength; i++) {
+      if (i in array) {
+        if (someFunction(array[i], i, array)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  tests({
+
+    '1. It should run the callback for each element in the array.': function() {
+      let callbackFnHasRun = 0;
+      some([1, 2, 3], function() {
+        callbackFnHasRun++;
+      })
+      eq(callbackFnHasRun, 3);
+    },
+
+    '2. It should pass the array element into the callback as the first argument.': function() {
+      some([1], function(arrayElement) {
+        eq(arrayElement, 1);
+      })
+    },
+
+    '3. It should pass the index of the array element being proccessed in the callback as the second argument.': function() {
+      some([1], function(arrayElement, index) {
+        eq(index, 0);
+      })
+    },
+
+    '4. It should pass the array of being proccessed in the callback as third argument.': function() {
+      let testArray = [1, 2, 3];
+      some(testArray, function(arrayElement, index, array) {
+        eq(testArray === array, true);
+      })
+    },
+
+    '5. It should run callback only for the assigned values in the array and exlude holes. (empty values).': function() {
+      let callbackFnHasRun = 0;
+      some([, , 1], function() {
+        callbackFnHasRun++;
+      })
+      eq(callbackFnHasRun, 1);
+    },
+
+    '6. If callback return true immediately exit some() and  return true.': function() {
+      let callbackFnHasRun = 0;
+
+      let someReturnValue = some([1, 2, 3], function(arrayElement) {
+        callbackFnHasRun++;
+        return arrayElement === 2;
+      })
+      eq(callbackFnHasRun, 2);
+      eq(someReturnValue, true);
+
+    },
+
+    '7. If callback doesnt return true, run the callback for all the array elements and return false': function() {
+      let callbackFnHasRun = 0;
+      let someReturnValue = some([1, 2, 3], function(arrayElement) {
+        callbackFnHasRun++;
+        return arrayElement === 5;
+      })
+      eq(callbackFnHasRun, 3);
+      eq(someReturnValue, false);
+    },
+
+    '8. It should have an optional this as third function argument.': function() {
+      some([1, 2], function() {
+        eq(this.test, 'Test case 8');
+      }, { test: 'Test case 8' })
+    },
+
+    '9. If no optional this is provided undefined will be used as this value .': function() {
+      some([1, 2], function() {
+        eq(this, undefined);
+      })
+    },
+
+    '10. It should NOT change( mutate ) the array of being called upon.': function() {
+      let testArray = [1, 2, 3];
+      let someReturnValue = some(testArray, function(arrayElement, index, array) {
+        return arrayElement === 2;
+      })
+      eq(testArray[0], 1);
+    },
+
+    '11. If empty array is provided some() should return false.': function() {
+      let someReturnValue = some([], function() { });
+      eq(someReturnValue, false);
+    },
+
+    '12. It should call callbackfn only for elements of the array which actually exist,  not for missing elements of the array.': function() {
+      let callbackFnHasRun = 0;
+      let someReturnValue = some([1, 2, 3], function(arrayElement, index, array) {
+        array.splice(2, 1);
+        callbackFnHasRun++;
+      });
+
+      eq(callbackFnHasRun, 2);
+    },
+
+    '13. It should set the number of the elements to be processed before the first callback call, elements which are appended to the array after the call will not be visited by callbackfn.': function() {
+      let callbackFnHasRun = 0;
+      let someReturnValue = some([1, 2, 3], function(arrayElement, index, array) {
+        if (index === 0) {
+          array.push(4);
+        }
+        callbackFnHasRun++;
+      });
+
+      eq(callbackFnHasRun, 3);
+    },
+
+    '14. If existing elements of the array are changed, their value as passed to callbackfn will be the value at the time every visits them.': function() {
+      let someReturnValue = some([1, 2, 3], function(arrayElement, index, array) {
+        array[2] = 0;
+        return arrayElement > 2;
+      });
+
+      eq(someReturnValue, false);
+    }
+
+
+
+  });
+</script>

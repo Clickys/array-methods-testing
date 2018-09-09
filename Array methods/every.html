@@ -1,0 +1,191 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+  // Prototype function 
+
+  // function some( array, callback, optionalThis ) {
+  //   for ( let i = 0; i < array.length; i++ ) {
+  //     if ( !callback( array[i], i, array ) ) {
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
+
+
+
+  // Function signature 
+  // every( array, function() {}, optionalThis );
+
+  // Function Parameters 
+
+  // An array => [] -> array 
+  // A callback function  -> callback
+  // Optional this -> optionalThis
+
+  // Callback Parameters 
+
+  // 1. element -> current element being processed
+  // 2. index -> index of the element being proccesed
+  // 3. array -> the array that filter was called
+
+  // Return value 
+
+  // false if the callback function returns a falsy value for any array element,  otherwise, true.
+
+
+  // Requirements 
+
+  // 1. It should run the callback for each element in the array. 
+  // 2. It should pass an array element into the callback function as the first argument.
+  // 3. It should pass the index of the array element being proccessed in the callback as the second argument.
+  // 4. It should pass the array of being proccessed in the callback as third argument.
+  // 5. It should run only on the array with assigned values and exclude holes.
+  // 6. If callback return false immediately exit every() and  return false.
+  // 7. If callback doesnt return false, run the callback for all the array elements and return true
+  // 8. It should have an optional this as third function argument.
+  // 9. If no optional this is provided undefined will be used as this value .
+  // 10. It should NOT change( mutate ) the array of being called upon.
+  // 11. If empty array is provided every() should return true.
+  // 12. It should call callbackfn only for elements of the array which actually exist,  not for missing elements of the array.
+  // 13. It should set the number of the elements to be processed before the first callback call, elements which are appended to the array after the call will not be visited by callbackfn.
+  // 14. If existing elements of the array are changed, their value as passed to callbackfn will be the value at the time every visits them.
+
+  function every(array, callback, optionalThis) {
+    let everyFunction = callback;
+    let arrayLength = array.length;
+
+    if (optionalThis) {
+      everyFunction = callback.bind(optionalThis);
+    }
+    for (let i = 0; i < arrayLength; i++) {
+      if (i in array) {
+        if (everyFunction(array[i], i, array)) {
+          continue;
+        } else {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  tests({
+
+    '1. It should run the callback for each element in the array.': function() {
+      let callbackFnHasRun = 0;
+      every([1, 2, 3], function() {
+        callbackFnHasRun++;
+        return 1; // added for test case 6. If we dont return 1 ( return truthy value ), callback function will return falsy ( undefined ) and the function will stopped.  
+      })
+      eq(callbackFnHasRun, 3);
+    },
+
+    '2. It should pass the array element into the callback as the first argument.': function() {
+      every([1], function(arrayElement) {
+        eq(arrayElement, 1);
+      })
+    },
+
+    '3. It should pass the index of the array element being proccessed in the callback as the second argument.': function() {
+      every([1], function(arrayElement, index) {
+        eq(index, 0);
+      })
+    },
+
+    '4. It should pass the array of being proccessed in the callback as third argument.': function() {
+      let testArray = [1, 2, 3];
+      every(testArray, function(arrayElement, index, array) {
+        eq(testArray, array);
+      })
+    },
+
+    '5. It should run callback only for the assigned values in the array and exlude holes. (empty values).': function() {
+      let arrayWithEmptyValues = [1, , 2, 3, , , 5];
+      let callbackFnHasRun = 0;
+      every(arrayWithEmptyValues, function(arrayElement) {
+        callbackFnHasRun++;
+        return arrayElement > 0; // added for test case 6. If we dont return 1 ( return truthy value ), callback function will return falsy ( undefined ) and the function will stopped. 
+      })
+      eq(callbackFnHasRun, 4);
+    },
+
+    '6. If callback return false immediately exit every() and  return false.': function() {
+      let callbackFnHasRun = 0;
+      let everyReturnedValue = every([1, 2, 3], function(arrayElement) {
+        callbackFnHasRun++;
+        return arrayElement < 1;
+      })
+      eq(callbackFnHasRun, 1);
+      eq(everyReturnedValue, false);
+
+    },
+
+    '7. If callback doesnt return false, run the callback for all the array elements and return true': function() {
+      let callbackFnHasRun = 0;
+      let everyReturnedValue = every([1, 2, 3, 4, 5], function(arrayElement) {
+        callbackFnHasRun++;
+        return arrayElement < 10;
+      })
+      eq(callbackFnHasRun, 5);
+      eq(everyReturnedValue, true);
+    },
+
+    '8. It should have an optional this as third function argument.': function() {
+      every([1, 2, 3], function() {
+        eq(this.test, 'Testing case 8');
+      }, { test: 'Testing case 8' })
+    },
+
+    '9. If no optional this is provided undefined will be used as this value .': function() {
+      every([1, 2, 3], function() {
+        eq(this, undefined);
+      })
+    },
+
+    '10. It should NOT change( mutate ) the array of being called upon.': function() {
+      let testArray = [1];
+      let everyReturnedValue = every(testArray, function(arrayElement) {
+        return arrayElement++;
+      })
+      eq(testArray[0], 1);
+    },
+
+    '11. If empty array is provided some() should return false.': function() {
+      let everyReturnedValue = every([], function(arrayElement) {
+        return arrayElement > 1;
+      })
+      eq(everyReturnedValue, true);
+    },
+    '12. It should call callbackfn only for elements of the array which actually exist,  not for missing elements of the array.': function() {
+      let callbackFnHasRun = 0;
+      every([1, 2, 3], function(arrayElement, index, array) {
+        callbackFnHasRun++;
+        array.splice(2, 1);
+        return arrayElement;
+      })
+      eq(callbackFnHasRun, 2);
+    },
+    '13. It should set the number of the elements to be processed before the first callback call, elements which are appended to the array after the call will not be visited by callbackfn. ': function() {
+      let callbackFnHasRun = 0;
+      every([1, 2, 3], function(arrayElement, index, array) {
+        callbackFnHasRun++;
+        array.push(4);
+        return arrayElement;
+      })
+      eq(callbackFnHasRun, 3);
+    },
+
+    '14. If existing elements of the array are changed, their value as passed to callbackfn will be the value at the time every visits them.': function() {
+      debugger;
+      let everyReturnedValue = every([1, 2, 3], function(arrayElement, index, array) {
+        array[2] = -1;
+        return arrayElement > 0;
+      })
+      eq(everyReturnedValue, false);
+    }
+
+
+
+  });
+</script>
