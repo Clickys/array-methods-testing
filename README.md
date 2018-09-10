@@ -4,6 +4,40 @@ This repository is about "recreating" array methods, and test them with jstinyte
 # Array Methods Testing
 
 This project is about "recreating" array methods, and test them with jstinytest testing library. Creating step by step with simple testing cases most of the array methods. All the testing cases are made with Tiniest JavaScript unit testing library.
+Array Methods
+
+Iterators:
+
+- [x] Array.prototype.forEach()
+- [] Array.prototype.filter()
+- [x] Array.prototype.map()
+- [] Array.prototype.reduce()
+- [] Array.prototype.find()
+- [] Array.prototype.findIndex()
+- [x] Array.prototype.every()
+- [x] Array.prototype.some()
+- [] Array.prototype.reduceRight()
+
+Accessors:
+
+- [] Array.prototype.concat()
+- [] Array.prototype.indexOf()
+- [] Array.prototype.lastIndexOf()
+- [] Array.prototype.includes()
+- [] Array.prototype.slice()
+- [] Array.prototype.join()
+
+Mutators
+
+- [] Array.prototype.push()
+- [] Array.prototype.pop()
+- [] Array.prototype.shift()
+- [] Array.prototype.unshift()
+- [] Array.prototype.fill()
+- [] Array.prototype.reverse()
+- [] Array.prototype.copyWithin()
+- [] Array.prototype.sort()
+- [] Array.prototype.splice()
 
 ## Getting Started
 

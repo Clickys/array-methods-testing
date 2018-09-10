@@ -1,0 +1,134 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+  // Prototype function 
+    // function forEach(array, callback, optionalThis) {
+    //   for ( let i = 0; i < array.length; i++ ) {
+    //     callback();
+    //   }
+    // }
+
+
+// Function signature 
+
+  // forEach([1,2,3], function() {}, optionalThis);
+
+// Function Parameters 
+  
+  // An array => []
+  // A callback function 
+  // Optional this
+
+// Callback Parameters 
+  
+  // 1. element -> current element being processed
+  // 2. index -> index of the element being proccesed
+  // 3. array -> the array that filter was called
+
+// Return value 
+  
+  // Always return undefined ( return nothing )
+
+
+// Requierments 
+    
+  // 1. It should run the callback for each element in the array. 
+  // 2. It should pass an array element into the callback function as the first argument.
+  // 3. It should pass the index of the array element being proccessed in the callback as the second argument.
+  // 4. It should pass the array of being proccessed in the callback as third argument.
+  // 5. It should run callback only for the assigned values in the array and exlude holes. (empty values).
+  // 6. It should have an optional this as third argument forEach function.
+  // 7. If no optional this is provided undefined will be used as this value.
+  // 8. It should NOT change( mutate ) the array of being called upon.
+  // 9. It should return nothing ( undefined )
+
+
+  function forEach(array, callbackFn, optionalThis) {
+    let forEachFunction = callbackFn;
+
+    if ( optionalThis ) {
+      forEachFunction = callbackFn.bind( optionalThis );
+    }
+
+    for (let i = 0; i < array.length; i++) {
+      if ( i in array ) {
+        forEachFunction(array[i], i, array);
+      }
+    }
+  }
+
+
+
+
+  tests({ 
+
+    '1. It should run the callback for each element in the array. ': function () {
+      let callbackFnHasRun = 0;
+      forEach([1, 2, 3], function() {
+        callbackFnHasRun++;
+      })
+      eq(callbackFnHasRun, 3);
+    },
+
+    '2. It should pass an array element into the callback function as the first argument.': function () {
+      forEach( [ 1 ], function( arrayElement ) {
+        eq(arrayElement, 1);
+      })
+    },
+
+    '3. It should pass the index of the array element being proccessed in the callback as the second argument.': function () {
+      forEach( [ 1 ], function( arrayElement, index ) {
+        eq(index, 0);
+      })
+    },
+
+    '4. It should pass the array of being proccessed in the callback as third argument.': function () {
+      let testArray = [ 1, 2, 3 ];
+      forEach( testArray, function( arrayElement, index, array ) {
+        eq(testArray, array);
+      })
+    },
+
+    '5. It should run callback only for the assigned values in the array and exlude holes. (empty values)': function () {
+      let testArray = [ 1, , 2, , 3 ];
+      let callbackFnHasRun = 0;
+      forEach( testArray, function() {
+        callbackFnHasRun++;
+      })
+      eq(callbackFnHasRun, 3);
+    },
+
+    '6. It should have an optional this as third argument forEach function.': function() {
+      forEach( [1, 2, 3], function() {
+        eq( this.test, 'Testing Case 6');
+      }, { test: 'Testing Case 6' });
+    },
+
+    '7. If no optional this is provided undefined will be used as this value.': function() {
+      forEach([ 1, 2, 3 ], function() {
+        eq( this, undefined );
+      })
+    },
+
+
+    '9. It should NOT change( mutate ) the array of being called upon.': function() {
+      let testArray = [ 1 ];
+      forEach( testArray, function( arrayElement, index, array ) {
+        return arrayElement + 1;
+      })
+      eq( testArray[0], 1 );
+      
+    },
+
+    '10.It should return nothing ( undefined )': function() {
+      let forEachReturnValue = forEach( [ 1, 2, 3 ], function(arrayElement) {
+        return arrayElement + 1;
+      })
+
+      eq( forEachReturnValue, undefined );
+    },
+
+
+
+  });
+</script>

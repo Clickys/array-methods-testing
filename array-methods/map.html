@@ -1,0 +1,149 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+// Prototype function 
+  // function map(array, callback, optionalThis) {
+  //   let mappedArray = [];
+    
+  //   for ( let i = 0; i < array.length; i++ ) {
+  //     mappedArray.push(callback(array[i]));
+  //   }
+
+  //   return mappedArray;
+  // } 
+
+
+// Function signature 
+
+  // map([1, 2, 3], function(){}, optionalThis);
+
+// Function Parameters 
+  
+  // An array => []
+  // A callback function 
+  // Optional this
+
+// Callback Parameters 
+  
+  // 1. element -> current element being processed
+  // 2. index -> index of the element being proccesed
+  // 3. array -> the array that filter was called
+
+// Return value 
+  
+  // A new array with each element being the result of the callback function.
+
+
+
+// It should return a new array from the callback results
+// The map() method creates a new array with the results of calling a provided function on every element in the calling array.
+
+// Requierments 
+    
+  // 1. It should run the callback for each element in the array. 
+  // 2. It should pass an array element into the callback function as the first argument.
+  // 3. It should pass the index of the array element being proccessed in the callback as the second argument.
+  // 4. It should pass the array of being proccessed in the callback as third argument.
+  // 5. It should run callback only for the assigned values in the array and exlude holes. (empty values).
+  // 6. It should have an optional this as third argument map function.
+  // 7. If no optional this is provided undefined will be used as this value.
+  // 8. It should return a new empty array.
+  // 9. It should return a new array with each element being the result of the callback function.
+  // 10. It should NOT change( mutate ) the array of being called upon.
+
+
+
+  function map( array, callback, optionalThis ) {
+    let mapFunction = callback;
+    let mappedArray = [];
+
+    if ( optionalThis ) {
+      mapFunction = callback.bind( optionalThis );
+    }
+    
+    for ( let i = 0; i < array.length; i++ ) {
+      if ( i in array ) {
+       mappedArray.push(mapFunction( array[ i ], i, array ));
+      }
+    }
+
+    return mappedArray;
+  }
+
+
+
+  tests({ 
+
+    '1. It should run the callback for each element in the array. ': function () {
+      let callbackFnHasRun = 0;
+      map([ 1, 2, 3 ], function() {
+        callbackFnHasRun++;
+      })
+      eq( callbackFnHasRun, 3 );
+    },
+
+    '2. It should pass an array element into the callback function as the first argument.': function () {
+      map( [ 1 ], function( arrayElement ) {
+        eq( arrayElement, 1 );
+      })
+    },
+
+    '3. It should pass the index of the array element being proccessed in the callback as the second argument.': function () {
+      map( [ 1 ], function( arrayElement, index ) {
+        eq( index, 0 );
+      })
+    },
+
+    '4. It should pass the array of being proccessed in the callback as third argument.': function () {
+      let testArray = [ 1, 2, 3, ];
+      map( testArray, function( arrayElement, index, array ) {
+        eq( testArray, array );
+      })
+    },
+
+    '5. It should run callback only for the assigned values in the array and exlude holes. (empty values)': function () {
+      let arrayWithHoles = [ 1, , 2, , , 3 ];
+      let callbackFnHasRun = 0;
+      map( arrayWithHoles, function() {
+        callbackFnHasRun++;
+      })
+      eq(callbackFnHasRun, 3);
+    },
+
+    '6. It should have an optional this as third argument of map function.': function() {
+      map([], function(){
+        eq( this.test, 'Test case 6' );
+      }, { test: 'Test case 6' })
+    },
+
+    '7. If no optional this is provided undefined will be used as this value.': function() {
+      map([], function(){
+        eq( this.test, undefined );
+      })
+    },
+
+
+    '8. It should return a new empty array.': function() {
+      let mappedArray = map( [ 1, 2, 3 ], function() {} );
+      eq( Array.isArray(mappedArray), true );
+    },
+
+    '9. It should NOT change( mutate ) the array of being called upon.': function() {
+      let testArray = [ 1, 2, 3 ];
+      let mappedArray = map( testArray, function( arrayElement ) {
+        return arrayElement;
+      })
+      eq( testArray !== mappedArray, true);      
+      },
+    '9. It should return a new array with each element being the result of the callback function.': function() {
+      let testArray = [ 1 ];
+      let mappedArray = map( testArray, function( arrayElement ) {
+        return arrayElement + 1;
+      })
+      eq( mappedArray[0], 2 );
+    },
+
+
+
+  });
+</script>
