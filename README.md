@@ -9,10 +9,10 @@ Array Methods
 Iterators:
 
 - [x] Array.prototype.forEach()
-- [] Array.prototype.filter()
+- [x] Array.prototype.filter()
 - [x] Array.prototype.map()
 - [] Array.prototype.reduce()
-- [] Array.prototype.find()
+- [x] Array.prototype.find()
 - [] Array.prototype.findIndex()
 - [x] Array.prototype.every()
 - [x] Array.prototype.some()
