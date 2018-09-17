@@ -1,0 +1,242 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+// Main Objective
+  // The findIndex() method returns the index of the first element in the array that satisfies the provided testing function. Otherwise -1 is returned.
+  
+// Prototype function 
+  // function findIndex(array, callback, optionalThis) {
+  //   for (let i = 0; i < array.length; i++) {
+  //     if ( callback(array[i], i, array) ) {
+  //       return i;
+  //     }
+  //   }
+  //   return -1;
+  // }
+
+
+// Function signature 
+  // findIndex(array, callback[, optionalThis])
+
+// Function Parameters 
+  
+  // An array => [] -> array 
+  // A callback function  -> callback
+  // Optional this -> optionalThis
+
+// Callback Parameters 
+  
+  // 1. element -> current element being processed
+  // 2. index -> index of the element being proccesed
+  // 3. array -> the array that filter was called
+
+// Return value 
+  
+  // An index in the array if an element passes the test; otherwise, -1.
+
+
+
+// Requirements 
+    
+  // 1. It should run the callback for each element in the array. 
+  // 2. It should pass an array element into the callback function as the first argument.
+  // 3. It should pass the index of the array element being proccessed in the callback as the second argument.
+  // 4. It should pass the array of being proccessed in the callback as third argument.
+  // 5. It should run the callback on the array with or whithout assigned values and indexes of entries not present in the array.
+  // 6. It should run the callback for each element in the array until the callback return true or coerce to true.
+  // 7. It should return the index of the iteration if the callback return true and exit the function.
+  // 8. It should return -1 if the callback doesnt return truthy value.
+  // 9. It should return -1 if an empty array is provided.
+  // 10. It should have an optional this as third function argument.
+  // 11. If no optional this is provided undefined will be used as this value .
+  // 12. It should not directly mutate the array of being called upon.
+  // 13. Callback can mutate the object( array ) is called upon.
+  // 14. It should set the range of the elements to be processed before the first invocation of callback.
+  // 15. It should not visit the elements that are appended to the array after the call to findIndex begins.
+  // 16. If an unvisited element of the array changed by the callback , its value passed to the callback will be the value at the time that visits the element.
+  // 17. It should visit the elements that are deleted while the findIdex call begins.
+
+
+  function findIndex(array, callback, optionalThis) {
+    let arrayLength = array.length;
+    let findIndexFunction = callback;
+
+    if (optionalThis) {
+      findIndexFunction = callback.bind( optionalThis );
+    }
+
+    for (let i = 0; i <  arrayLength; i++) {
+      if ( findIndexFunction(array[i], i, array) ) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+
+
+
+  tests({ 
+
+    '1. It should run the callback for each element in the array.': function () {
+      let callbackFnHasRun = 0;
+      findIndex([1,2,3], function() {
+        callbackFnHasRun++;
+      })
+
+      eq(callbackFnHasRun, 3);
+    },
+
+    '2. It should pass the array element into the callback as the first argument.': function () {
+      findIndex([1], function(arrayElement) {
+        eq(arrayElement, 1);
+      })
+
+    },
+
+    '3. It should pass the index of the array element being proccessed in the callback as the second argument.': function () {
+      findIndex([1], function(arrayElement, index) {
+        eq(index, 0);
+      })
+
+    },
+
+    '4. It should pass the array of being proccessed in the callback as third argument.': function () {
+      let testArray = [1, 2, 3];
+      findIndex(testArray, function(arrayElement, index, array) {
+        eq(testArray === array, true);
+      })
+
+    },
+
+    '5. It should run the callback on the array with or whithout assigned values and indexes of entries not present in the array.': function () {
+      let arrayWithUnsignedValues = [1, , 2, , , 3, , , ,];
+      let callbackFnHasRun = 0;
+      findIndex(arrayWithUnsignedValues, function() {
+        callbackFnHasRun++;
+      })
+
+      eq(callbackFnHasRun, 9);
+
+    },
+
+    '6. It should run the callback for each element in the array until the callback return true or coerce to true.': function () {
+      let callbackFnHasRun = 0;
+      findIndex([1, 2, 3], function(arrayElement) {
+        callbackFnHasRun++;
+        return arrayElement === 2;
+      })
+
+      eq(callbackFnHasRun, 2);
+
+
+    },
+
+    '7. It should return the index of the iteration if the callback return true and exit the function.': function() {
+      let callbackFnHasRun = 0;
+      let findIndexReturnedValue = findIndex([1, 2, 3], function(arrayElement) {
+        callbackFnHasRun++;
+        return arrayElement === 2;
+      })
+
+      eq(callbackFnHasRun, 2);
+      eq(findIndexReturnedValue, 1);
+
+
+    },
+
+    '8. It should return -1 if the callback doesnt return truthy value.': function() {
+      let findIndexReturnedValue = findIndex([1, 2, 3], function(arrayElement) {
+        return arrayElement > 3;
+      })
+
+      eq(findIndexReturnedValue, -1);
+
+    }, 
+
+    '9. It should return -1 if an empty array is provided.': function() {
+      let findIndexReturnedValue = findIndex([], function(){});
+      eq( findIndexReturnedValue, -1);
+
+    },
+
+    '10. It should have an optional this as third function argument.': function() {
+      findIndex([1], function() {
+        eq(this.test, 'Testing Case 10');
+      }, { test: 'Testing Case 10' })
+
+    },
+
+    '11. If no optional this is provided undefined will be used as this value.': function() {
+      findIndex([1], function() {
+        eq(this, undefined);
+      })    
+      
+      },
+
+    '12. It should not directly mutate the array of being called upon.': function() {
+      let testArray = [ 1, 2, 3 ];
+      findIndex(testArray, function() {})
+      
+      eq(testArray[0], 1);
+    },
+
+    '13. Callback can mutate the object( array ) is called upon.': function() {
+      let testArray = [ 1, 2, 3 ];
+      findIndex(testArray, function(arrayElement, index, array) {
+        if ( index === 0 ) { // check if is the first time the callback has run.
+          testArray[1] = 'changed';
+        }
+      })
+      
+      eq(testArray[1], 'changed');
+    },
+
+    '14. It should set the range of the elements to be processed before the first invocation of callback.': function() {
+      let callbackFnHasRun = 0;
+      findIndex([1, 2, 3], function(arrayElement, index, array) {
+        callbackFnHasRun++;
+        array.push(4); // creating basically an infinity loop. Each iteration a 4 should be pushed into the array being proccessed.
+      })
+
+      eq(callbackFnHasRun, 3);
+    },
+
+    '15. It should not visit the elements that are appended to the array after the call to findIndex begins.': function() {
+      let callbackFnHasRun = 0;
+      findIndex([1, 2, 3], function(arrayElement, index, array) {
+        callbackFnHasRun++;
+        if ( index === 0 ) {
+          array.push(4); // if its the first time the callback has run push 4 at the end of the array.
+        }
+      })
+
+      eq(callbackFnHasRun, 3); // Callback will not visit the 4 element in the array , because it has run only 3 times.
+    },
+
+    '16. If an unvisited element of the array changed by the callback , its value passed to the callback will be the value at the time that visits the element.': function() {
+      let testArray = [ 1, 2, 3]
+      let findIndexReturnedValue = findIndex(testArray, function(arrayElement, index, array) {
+        array[2] = 5;
+        return arrayElement === 5;
+      })
+      eq(testArray[2], 5);
+      eq(findIndexReturnedValue, 2);
+    },
+
+    '17. It should visit the elements that are deleted while the findIdex call begins.': function() {
+      let callbackFnHasRun = 0;
+      findIndex([1, 2, 3], function(arrayElement, index, array) {
+        if (index === 0) {
+          array.pop(); // if the first callback run , it remove the last array element .
+        }
+        callbackFnHasRun++;
+        return arrayElement > 3;
+      })
+      eq(callbackFnHasRun, 3);
+    },
+
+
+
+  });
+</script>

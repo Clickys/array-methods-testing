@@ -1,0 +1,233 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+// Main Objective
+  // The reduce() method executes a reducer function (that you provide) on each member of the array resulting in a single output value.
+
+
+  
+// Prototype function 
+  // function reduce(array, callback, initialValue) {
+  //   let accumulator = initialValue;
+  //   for (let i = 0; i < array.length; i++) {
+  //     accumulator = callback(accumulator, array[i], i, array);
+  //   }
+  //   return accumulator;
+  // }
+
+
+// Function signature 
+  // reduce(array, callback, [,initialValue])
+
+// Function Parameters 
+  
+  // An array => [] -> array 
+  // A callback function  -> callback
+  // Optional value to use as first argument -> initialValue
+
+// Callback Parameters 
+  
+  // 1. Accumulator -> accumulator
+  // 2. Current Value  -> currentValue
+  // 3. Current Index  -> currentIndex
+  // 4. Source Array  -> array
+
+// Return value 
+  
+  // The value that results from the reduction.
+
+
+// The first time the callback is called, accumulator and currentValue can be one of two values. If no initialValue is provided, then accumulator will be equal to the first value in the array, and currentValue will be equal to the second.
+
+// Requirements 
+    // 1. If initialValue is provided callback should run array length times. 
+    // 2. If initialValue is not provided callback should run array length times -1.
+    // 3. If initialValue is provided the accumulator will be equal to initialValue.
+    // 4. If initialValue is provided currentValue will be equal to the first value in the array.
+    // 5. If initialValue is provided callback should start at index 0.
+    // 6. If initialValue is not provided callback should start at index 1.
+    // 7. If initialValue is not provided the accumulator will be equal to the first value in the array.
+    // 8. If initialValue is not provided currentValue will be equal to the second array value.
+    // 9. It should reduce and return the accumulator at the end of the function.
+    // 10. If initialValue is not provided and the array is empty(no holes) should throw a TypeError.
+    // 11. If initialValue is not provided and the array has holes , accumulator should be the first assigned value of the array.
+    // 12. If initialValue is not provided and array has one element(regardless of position), it should return the array element without calling callback.
+    // 13. If initialValue is provided and array is empty(no holes), it should return the initialValue without calling callback.
+    // 14. It should not directly mutate the array of being processed.
+    // 15. It should not visit the elements that are appended after the callback begins(fixed array length).
+    // 16. If existing elements of the array are changed, their value as passed to callbackfn will be the value at the time callback visits them.
+    // 17. If elements are deleted after the call of the callback will not be visited.
+  
+  function reduce(array, callback, initialValue) {
+    let startingIndex = 0;
+    let accumulator;
+    let arrayLength = array.length;
+
+    if (arguments.length < 3) { // initialValue  is not provided
+      if (Object.keys(array).length === 0) {
+        throw new TypeError('Reduce of empty array with no initial value');
+      }
+
+      if (Object.keys(array).length === 1) {
+        let onlyIndex = Object.keys(array);
+        let onlyElement = array[onlyIndex];
+        return onlyElement;
+      }
+      let arrayWithNoHoles = Object.keys(array);
+      startingIndex = arrayWithNoHoles[0];  
+      accumulator = array[startingIndex];
+      startingIndex++;      
+    } else { // initialValue is provided
+      accumulator = initialValue;
+    }
+
+    for (let i = startingIndex; i < arrayLength; i++) {
+      if (i in array) {
+        accumulator = callback(accumulator, array[i], i, array);
+      }    
+    }
+
+    return accumulator;
+
+  }
+
+
+
+
+  tests({ 
+
+    '1. If initialValue is provided callback should run array length times. ': function () {
+      let callbackFnHasRun = 0;
+      reduce([1, 2, 3], function() {
+        callbackFnHasRun++;
+      }, 0);
+      eq(callbackFnHasRun, 3);
+    },
+
+    '2. If initialValue is not provided callback should run array length times -1.': function () {
+      let callbackFnHasRun = 0;
+      reduce([1, 2, 3], function() {
+        callbackFnHasRun++;
+      });
+      eq(callbackFnHasRun, 2);
+    },
+
+    '3. If initialValue is provided the accumulator will be equal to initialValue.': function () {
+      reduce([1], function(accumulator) {
+        eq(accumulator, 0);
+      }, 0);
+    },
+    
+    '4. If initialValue is provided currentValue will be equal to the first value in the array.': function () {
+      reduce([1], function(accumulator, currentValue) {
+        eq(currentValue, 1);
+      });
+    },
+
+    '5. If initialValue is provided callback should start at index 0.': function () {
+      reduce([1], function(accumulator, currentValue, currentIndex) {
+        eq(currentIndex, 0);
+      }, 0)
+    },
+
+    '6. If initialValue is not provided callback should start at index 1.': function () {
+      reduce([1, 2], function(accumulator, currentValue, currentIndex) {
+        eq(currentIndex, 1);
+      })
+    },
+
+    '7. If initialValue is not provided the accumulator will be equal to the first value in the array.': function () {
+      reduce([1, 2], function (accumulator) {
+        eq(accumulator, 1);
+      })
+    },
+
+    '8. If initialValue is not provided currentValue will be equal to the second array value.': function () {
+      reduce([1, 2], function(accumulator, currentValue) {
+        eq(currentValue, 2);
+      })
+    },
+
+    '9. It should reduce and return the accumulator at the end of the function.': function () {
+      let reduceReturnedValue = reduce([1, 2, 3], function(accumulator, currentValue) {
+        return accumulator + currentValue;
+      })
+      eq(reduceReturnedValue, 6)
+    },
+
+    '10. If initialValue is not provided and the array is empty(no holes) should throw a TypeError.': function () {
+      try {
+        reduce([, , , ], function() {});
+      } catch(e) {
+        eq(e instanceof TypeError, true);
+        eq(e.message, 'Reduce of empty array with no initial value');
+      }
+    },
+
+    '11. If initialValue is not provided and the array has holes , accumulator should be the first assigned value of the array.': function() {
+      reduce([, , , , , 5, , 10], function(accumulator, currentValue) {
+        eq(accumulator, 5);
+        eq(currentValue, 10);
+      })
+    },
+
+    '12. If initialValue is not provided and array has one element(regardless of position), it should return the array element without calling callback.': function () {
+      let callbackFnHasRun = 0;
+      let reduceReturnedValue = reduce([, , , , 1, , ,], function() {
+        callbackFnHasRun++;
+      });
+      eq(reduceReturnedValue, 1);
+    },
+
+    '13. If initialValue is provided and array is empty(no holes), it should return the initialValue without calling callback.': function () {
+      let reduceReturnedValue = reduce( [, , ,  , ,  ], function() {}, 10);
+      eq(reduceReturnedValue, 10);
+    },
+
+    '14. It should not directly mutate the array of being processed.': function () {
+      let testArray = [1, 2, 3];
+      let reduceReturnedValue = reduce(testArray, function() {});
+      eq(testArray[0], 1);
+      eq(testArray[1], 2);
+      eq(testArray[2], 3);
+    },
+
+    '16. It should pass array as fourth callback argument.': function() {
+      let testArray = [1, 2, 3];
+      reduce(testArray, function( accumulator, currentValue, currentIndex, array) {
+        eq(array === testArray, true);
+      })
+    },
+
+    '15. It should not visit the elements that are appended after the callback begins(fixed array length).': function () {
+      let callbackFnHasRun = 0;
+      reduce([1, 2, 3], function(accumulator, currentValue, currentIndex, array) {
+        callbackFnHasRun++;
+        array.push(4);
+      })
+      eq(callbackFnHasRun, 2);
+    },
+
+    '16. If existing elements of the array are changed, their value as passed to callbackfn will be the value at the time callback visits them.': function () {
+      let reduceReturnedValue = reduce([1, 2, 3], function(accumulator, currentValue, currentIndex, array) {
+        array[2] = 1;
+        return accumulator + currentValue;
+      })
+      eq(reduceReturnedValue, 4);
+    },
+
+    '17. If elements are deleted after the call of the callback will not be visited.': function () {
+      let reduceReturnedValue = reduce([1, 2, 3], function(accumulator, currentValue, currentIndex, array) {
+        if (currentIndex === 0) {
+          array.pop(); // remove last array element
+        }
+        return accumulator + currentValue;
+      }, 0)
+      eq(reduceReturnedValue, 3);
+    },
+    
+    
+
+
+  });
+</script>
