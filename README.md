@@ -1,4 +1,5 @@
 # array-methods-testing
+
 This repository is about "recreating" array methods, and test them with jstinytest testing library.
 
 # Array Methods Testing
@@ -8,54 +9,52 @@ Array Methods
 
 Iterators:
 
-- [x] Array.prototype.forEach()
-- [x] Array.prototype.filter()
-- [x] Array.prototype.map()
-- [x] Array.prototype.reduce()
-- [x] Array.prototype.find()
-- [x] Array.prototype.findIndex()
-- [x] Array.prototype.every()
-- [x] Array.prototype.some()
-- [] Array.prototype.reduceRight()
+-   [x] Array.prototype.forEach()
+-   [x] Array.prototype.filter()
+-   [x] Array.prototype.map()
+-   [x] Array.prototype.reduce()
+-   [x] Array.prototype.find()
+-   [x] Array.prototype.findIndex()
+-   [x] Array.prototype.every()
+-   [x] Array.prototype.some()
+-   [] Array.prototype.reduceRight()
 
 Accessors:
 
-- [x] Array.prototype.concat()
-- [] Array.prototype.indexOf()
-- [] Array.prototype.lastIndexOf()
-- [] Array.prototype.includes()
-- [] Array.prototype.slice()
-- [] Array.prototype.join()
+-   [x] Array.prototype.concat()
+-   [x] Array.prototype.indexOf()
+-   [] Array.prototype.lastIndexOf()
+-   [] Array.prototype.includes()
+-   [] Array.prototype.slice()
+-   [] Array.prototype.join()
 
 Mutators
 
-- [] Array.prototype.push()
-- [] Array.prototype.pop()
-- [] Array.prototype.shift()
-- [] Array.prototype.unshift()
-- [] Array.prototype.fill()
-- [] Array.prototype.reverse()
-- [] Array.prototype.copyWithin()
-- [] Array.prototype.sort()
-- [] Array.prototype.splice()
+-   [] Array.prototype.push()
+-   [] Array.prototype.pop()
+-   [] Array.prototype.shift()
+-   [] Array.prototype.unshift()
+-   [] Array.prototype.fill()
+-   [] Array.prototype.reverse()
+-   [] Array.prototype.copyWithin()
+-   [] Array.prototype.sort()
+-   [] Array.prototype.splice()
 
 ## Getting Started
 
-Download the file and just open each array method file in your browser. 
+Download the file and just open each array method file in your browser.
 
 ### Prerequisites
 
 You dont need any !
 
-
 ## Built With
 
-* [tinytest.js](https://github.com/gordonmzhu/jstinytest) - Tiniest JavaScript unit testing library
-
+-   [tinytest.js](https://github.com/gordonmzhu/jstinytest) - Tiniest JavaScript unit testing library
 
 ## Authors
 
-* **Andreas Chris** - *Initial work* - 
+-   **Andreas Chris** - _Initial work_ -
 
 ## License
 
@@ -63,5 +62,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Gordon Zhu for being excelent teacher and inspiration.  
-* watchandcode.com
+-   Gordon Zhu for being excelent teacher and inspiration.
+-   watchandcode.com
