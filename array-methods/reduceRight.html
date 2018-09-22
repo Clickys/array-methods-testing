@@ -1,0 +1,238 @@
+<script src="../tinytest.js"></script>
+<script>
+  // Objective
+  // The reduceRight() method applies a function against an accumulator and each value of the array (from right-to-left) to reduce it to a single value.
+
+  // Prototype implementation
+  // function reduceRight(array, callback, initialValue) {
+  //   let accumulator = initialValue;
+  //   for (let i = array.length; i >= 0; i--) {
+  //     accumulator = callback(accumulator, array[i], i, array);
+  //   }
+  //   return accumulator;
+  // }
+
+
+
+  // Function signature 
+  // reduceRight(array, callback, [,initialValue])
+
+
+  // Function Parameters 
+  // array
+  // callback
+  // initialValue
+
+  // Callback Parameters: 
+  // 1. Accumulator(acc) -> accumulator
+  // 2. Current Value(cur) -> currentValue
+  // 3. Current Index (idx) -> currentIndex
+  // 4. Source Array (src) ->array
+
+  // Return Value
+  // Return a single value
+
+  // Requirements:
+  // 1. If initialValue is provided callback should run array length times in descending order.
+  // 2. If initialValue is provided accumulator will be equal to the initialValue.
+  // 3. If initialValue is provided currentValue will be equal to the last array value.
+  // 4. If initialValue is provided and the array is empty it should return the initialValue.
+  // 5. If initialValue is should exclude holes . 
+  // 6. If initialValue is not provided callback should run array lenght -1 times in descending order.
+  // 7. If initialValue is not provided accumulator will be equal to the last value in the array.
+  // 8. If initialValue is not provided the currentValue will be equal to the second to last value in the array.
+  // 9. If initialValue is not provided and the array has only one element(regardless of position) it should return the array element without calling callback.
+  // 10.If initialValue is not provided should exclude holes.
+  // 11.It should reduce and return accumulator(single value).
+  // 12.If initialValue is not provided and the array is empty should throw a TypeError.
+  // 13.It should not directly mutate the array which is being called up. 
+  // 14.The range of elements to be proccessed should be fixed before the first call to callback.
+  // 15.It should not visit the elements that are appended to the array after reduceRight invokation.
+  // 16.If existing elements of the array are changed by callback, their value as passed to callback will be the updated  value.
+  // 17.It should not visit the elements that are deleted after the invokation of reduceRight.
+
+
+  // ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  function reduceRight(array, callback, initialValue) {
+    let accumulator;
+    let indexToStart = array.length - 1;
+    let arrayLength = array.length;
+
+    if (arguments.length > 2) { // If initialValue is provided
+      if (Object.keys(array).length === 0) {
+        return initialValue;
+      }
+
+      accumulator = initialValue;
+    } else { // if no initialValue is provided
+      if (Object.keys(array).length === 1) {
+        let elementIndex = Object.keys(array)[0];
+        let elementValue = array[elementIndex];
+        return elementValue;
+      }
+      if (!Object.keys(array).length) {
+        throw new TypeError('Reduce of empty array with no initial value');
+      }
+      accumulator = array[indexToStart];
+      indexToStart--;
+    }
+    for (let i = indexToStart; i >= 0; i--) {
+      if (i in array) {
+        accumulator = callback(accumulator, array[i], i, array);
+      }
+    }
+    return accumulator;
+  }
+
+  tests({
+
+    '1. If initialValue is provided callback should run array length times in descending order.': function() {
+      let callbackFnHasRun = 0;
+      reduceRight([1, 2, 3], function() {
+        callbackFnHasRun++;
+      }, 0);
+      eq(callbackFnHasRun, 3);
+    },
+
+
+    '2. If initialValue is provided accumulator will be equal to the initialValue.': function() {
+      reduceRight([1], function(accumulator) {
+        eq(accumulator, 10);
+      }, 10);
+
+    },
+
+    '3. If initialValue is provided currentValue will be equal to the last array value.': function() {
+      reduceRight([1], function(accumulator, initialValue) {
+        eq(initialValue, 1);
+      }, 10);
+
+    },
+
+    '4. If initialValue is provided and the array is empty it should return the initialValue without calling callback.': function() {
+      let callbackFnHasRun = 0;
+      let reduceRightReturnedValue = reduceRight([], function() {
+        callbackFnHasRun++;
+      }, 15);
+      eq(callbackFnHasRun, 0);
+      eq(reduceRightReturnedValue, 15);
+
+    },
+
+    '5. If initialValue it should exclude holes .': function() {
+      let arrayWithUnassignedValues = [1, , , , 5, 6,];
+      let callbackFnHasRun = 0;
+
+      reduceRight(arrayWithUnassignedValues, function() {
+        callbackFnHasRun++;
+      }, 0)
+
+      eq(callbackFnHasRun, 3);
+
+    },
+
+    '6. If initialValue is not provided callback should run array length -1 times in descending order.': function() {
+      let callbackFnHasRun = 0;
+      reduceRight([1, 2], function() {
+        callbackFnHasRun++;
+      })
+      eq(callbackFnHasRun, 1);
+
+    },
+
+    '7. If initialValue is not provided accumulator will be equal to the last value in the array.': function() {
+      reduceRight([1, 2], function(accumulator) {
+        eq(accumulator, 2);
+      })
+
+    },
+
+    '8. If initialValue is not provided the currentValue will be equal to the second to last value in the array.': function() {
+      reduceRight([1, 2], function(accumulator, currentValue) {
+        eq(accumulator, 2);
+        eq(currentValue, 1);
+      })
+
+    },
+
+    '9. If initialValue is not provided and the array has only one element(regardless of position) it should return the array element without calling callback.': function() {
+      let callbackFnHasRun = 0;
+      let arrayWithUnassignedValues = [1, , , ,];
+      let reduceRightReturnedValue = reduceRight(arrayWithUnassignedValues, function() {
+        callbackFnHasRun++;
+      })
+      eq(reduceRightReturnedValue, 1);
+      eq(callbackFnHasRun, 0);
+
+    },
+
+    '10.If initialValue is not provided should exclude holes.': function() {
+      let callbackFnHasRun = 0;
+      let arrayWithUnassignedValues = [1, , , , 3, ,];
+      reduceRight(arrayWithUnassignedValues, function() {
+        callbackFnHasRun++;
+      })
+      eq(callbackFnHasRun, 2);
+
+    },
+
+    '11.It should reduce and return accumulator(single value).': function() {
+      let reduceRightReturnedValue = reduceRight([1, 2], function(accumulator, currentValue) {
+        return accumulator + currentValue;
+      })
+      eq(reduceRightReturnedValue, 3);
+
+    },
+
+    '12.If initialValue is not provided and the array is empty should throw a TypeError.': function() {
+      try {
+        reduceRight([], function() { });
+      } catch (e) {
+        eq(e instanceof TypeError, true);
+        eq(e.message, 'Reduce of empty array with no initial value');
+      }
+
+    },
+
+    '13.It should not directly mutate the array which is being called up.': function() {
+      let testArray = [1, 2];
+      reduceRight(testArray, function() { });
+      eq(testArray[1], 2);
+
+    },
+
+    '14.It should pass currentIndex as third argument of the callback': function() {
+      reduceRight([1], function(accumulator, currentValue, currentIndex) {
+        eq(currentIndex, 0);
+      })
+    },
+
+    '14.It should pass array as fourth argument of the callback': function() {
+      let testArray = [1, 2, 3];
+      reduceRight(testArray, function(accumulator, currentValue, currentIndex, array) {
+        eq(array === testArray, true);
+      })
+    },
+
+    '15.It should not visit the elements that are appended to the array after reduceRight invokation.': function() {
+      let callbackFnHasRun = 0;
+      reduceRight([1, 2], function(accumulator, currentValue, currentIndex, array) {
+        array.push(3); // infinite loop 
+        callbackFnHasRun++;
+      }, 0)
+      eq(callbackFnHasRun, 2);
+
+    },
+
+    '16.If existing elements of the array are changed by callback, their value as passed to callback will be the updated  value.': function() {
+      let reduceRightReturnedValue = reduceRight([1, 2], function(accumulator, currentValue, currentIndex, array) {
+        array[0] = 4;
+        return accumulator + currentValue;
+      }, 0)
+      eq(reduceRightReturnedValue, 6);
+
+    },
+
+  });
+</script>

@@ -17,13 +17,13 @@ Iterators:
 -   [x] Array.prototype.findIndex()
 -   [x] Array.prototype.every()
 -   [x] Array.prototype.some()
--   [] Array.prototype.reduceRight()
+-   [x] Array.prototype.reduceRight()
 
 Accessors:
 
 -   [x] Array.prototype.concat()
 -   [x] Array.prototype.indexOf()
--   [] Array.prototype.lastIndexOf()
+-   [x] Array.prototype.lastIndexOf()
 -   [] Array.prototype.includes()
 -   [] Array.prototype.slice()
 -   [] Array.prototype.join()
