@@ -1,0 +1,172 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+  // Main Objective
+  //The slice() method returns a shallow copy of a portion of an array into a new array object selected from begin to end (end not included). The original array will not be modified.
+
+  // Prototype function 
+  // function slice(array, startIndex = 0, endIndex) { 
+  //   let sliceArray = [];
+  //   for (let i = startIndex; i  < array.length; i++) {
+  //     sliceArray.push(array[i]);
+  //   }
+  //   return sliceArray;
+  // }
+
+
+
+  // Function signature 
+  // slice(array, startIndex, [, endIndex])
+
+  // Function Parameters 
+  // startIndex -> Zero-based index at which to begin extraction.
+  // endIndex -> Zero-based index before which to end extraction. slice extracts up to but not including end.
+
+  // Return value 
+  // A new array containing the extracted elements.
+
+  // Requirements 
+
+  // 1. If no arguments passed it return an array.
+  // 2. If no arguments passed, it should start from index 0 as default and extract all array elements to new array.
+  // 3. It should have an optional startIndex as first argument, which set the index from where to begin extraction.
+  // 4. If the startIndex is provided and is negative, the computed index is calculated to be used as a position in the array at which to begin the extraction (array.length + startIndex).
+  // 5. If the startIndex is provided and is negative, and  the computed index is greater than array.length startInde should start at 0 index.
+  // 6. If startIndex is undefined, it should start from index 0.
+  // 7. If startIndex is greater than the length of the array(array.length), it should return an empty array.
+  // 8. It should have an optional endIndex as second argument, which is the index before which to end extraction.(not including it in extraction)
+  // 9. If endIndex is provided and is negative, the computed index is calculated to be used as a position in the array at which to end the extraction (array.length + startIndex).
+  // 10.If endIndex is provided and is greater than the length of the array, slice extracts through to the end of the array(arr.length).
+  // 11. If endIndex is not provided, it should be array.length as default. (extract through the end).
+  // 12. It should not mutate the array called upon.
+  // 13. If no arguments passed it should return an empty array.
+
+
+  function slice(array, startIndex = 0, endIndex = array.length) {
+    let slicedArray = [];
+
+
+    if (startIndex < 0) { // if startIndex is negative
+      startIndex = array.length + startIndex;
+      if (startIndex < 0) {
+        startIndex = 0;
+      }
+    }
+
+    if (startIndex > array.length) { // if startIndex is greater than array.length
+      return [];
+    }
+
+    if (endIndex < 0) {
+      endIndex = array.length + endIndex;
+    }
+
+    if (endIndex > array.length) {
+      endIndex = array.length;
+    }
+
+    for (let i = startIndex; i < endIndex; i++) {
+      slicedArray.push(array[i]);
+    }
+
+    return slicedArray;
+  }
+
+
+  tests({
+    '1. If no arguments passed it return an array.': function () {
+      let sliceReturnedValue = slice([1, 2, 3]);
+      eq(Array.isArray(sliceReturnedValue), true);
+    },
+
+    '2. If no arguments passed, it should start from index 0 as default and extract all array elements to new array.': function () {
+      let sliceReturnedValue = slice([1, 2, 3]);
+      eq(sliceReturnedValue[0], 1);
+      eq(sliceReturnedValue[1], 2);
+      eq(sliceReturnedValue[2], 3);
+    },
+
+    '3. It should have an optional startIndex as first argument, which set the index from where to begin extraction.': function () {
+      let sliceReturnedValue = slice([1, 2, 3], 1);
+      eq(sliceReturnedValue[0], 2);
+      eq(sliceReturnedValue[1], 3);
+      eq(sliceReturnedValue.length, 2);
+    },
+
+
+    '4. If the startIndex is provided and is negative, the computed index is calculated to be used as a position in the array at which to begin the extraction (array.length + startIndex).': function () {
+      let sliceReturnedValue = slice([1, 2, 3, 4, 5], -2);
+      eq(sliceReturnedValue[0], 4);
+      eq(sliceReturnedValue[1], 5);
+    },
+
+    '5. If the startIndex is provided and is negative, and  the computed index is greater than array.length startInde should start at 0 index.': function () {
+      let sliceReturnedValue = slice([1, 2, 3], -15);
+      eq(sliceReturnedValue[0], 1);
+      eq(sliceReturnedValue[2], 3);
+    },
+
+
+    '6. If startIndex is undefined, it should start from index 0.': function () {
+      let sliceReturnedValue = slice([1, 2, 3], undefined);
+      eq(sliceReturnedValue.length, 3);
+    },
+
+
+    '7. If startIndex is greater than the length of the array(array.length), it should return an empty array.': function () {
+      let sliceReturnedValue = slice([1, 2, 3, 4, 5], 15);
+      eq(sliceReturnedValue.length, 0);
+      eq(Array.isArray(sliceReturnedValue), true);
+    },
+
+
+    '8. It should have an optional endIndex as second argument, which is the index before which to end extraction.(not including it in extraction).': function () {
+      let sliceReturnedValue = slice([1, 2, 3, 4, 5], 1, 2);
+      let sliceReturnedValue1 = slice([1, 2, 3, 4, 5], 0, 3);
+      eq(sliceReturnedValue[0], 2);
+      eq(sliceReturnedValue1[0], 1);
+      eq(sliceReturnedValue1[1], 2);
+      eq(sliceReturnedValue1[2], 3);
+      eq(sliceReturnedValue1[3] === undefined, true);
+    },
+
+
+    '9. If endIndex is provided and is negative, the computed index is calculated to be used as a position in the array at which to end the extraction (array.length + startIndex).': function () {
+      let sliceReturnedValue = slice([1, 2, 3, 4, 5], 1, -2);
+      eq(sliceReturnedValue[0], 2);
+      eq(sliceReturnedValue[1], 3);
+      eq(sliceReturnedValue[2] === undefined, true);
+    },
+
+    '10. If endIndex is provided and is greater than the length of the array, slice extracts through to the end of the array(arr.length).': function () {
+      let sliceReturnedValue = slice([1, 2, 3], 1, 15);
+      eq(sliceReturnedValue.length, 2);
+      eq(sliceReturnedValue[0], 2);
+      eq(sliceReturnedValue[1], 3);
+
+    },
+
+    '11. If endIndex is not provided, it should be array.length as default. (extract through the end).': function () {
+      let sliceReturnedValue = slice([1, 2, 3, 4, 5], 1);
+      eq(sliceReturnedValue.length, 4);
+    },
+
+
+    '12. It should not mutate the array called upon.': function () {
+      let testArray = [1, 2];
+      let sliceReturnedValue = slice(testArray);
+      eq(testArray[0], 1);
+      eq(testArray[1], 2);
+    },
+
+    '13. If no arguments passed it should return an empty array.': function () {
+      let sliceReturnedValue = slice([]);
+      eq(sliceReturnedValue.length, 0);
+    },
+
+
+
+
+
+  });
+</script>
