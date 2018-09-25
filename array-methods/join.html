@@ -1,0 +1,110 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+  // Main Objective
+  //The join() method joins all elements of an array (or an array-like object) into a string and returns this string.
+
+  // Prototype function 
+
+
+
+  // Function signature 
+  // join(array, [, seperator]);
+
+  // Function Parameters 
+  // optional seperator -> Specifies a string to separate each pair of adjacent elements of the array. 
+
+  // Return value 
+  // A string with all array elements joined. If arr.length is 0, the empty string is returned.
+
+  // Requirements 
+
+  // 1. It should return a String.
+  // 2. It should convert array elements to string concatenate and return them. 
+  // 2. If separator is not provided, let separator be the single-element String ",".
+  // 3. If separator is provided, it should convert it to string and and separate each array element with the separator provided.
+  // 4. If separator is an empty string, all elements are joined without any characters in between them.
+  // 4. If array length is 0 , return an empty string.
+  // 5. If array element is undefined or null, return an empty string.
+
+  function join(array, separator = ',') {
+    let joinedString = '';
+
+    if (array.length === 0) {
+      return '';
+    }
+
+    for (let i = 0; i < array.length; i++) {
+
+      if (array[i] === undefined || array[i] === null) {
+        joinedString += ',';
+        continue;
+      }
+
+      if (i === array.length - 1) {
+        joinedString += array[i];
+        continue;
+      }
+      joinedString += array[i] + separator;
+    }
+    return joinedString;
+  }
+  tests({
+
+    '1. It should return a String.': function () {
+      let joinReturnedValue = join([1, 2, 3]);
+      eq(typeof joinReturnedValue === 'string', true);
+    },
+
+    '2. If separator is not provided, convert array elements to string, concatenate using as separator "," and return them as one string. ': function () {
+      let joinReturnedValue = join([1, 2, 3]);
+      eq(typeof joinReturnedValue === 'string', true);
+      eq(joinReturnedValue, '1,2,3');
+
+    },
+
+    '3. If array element is a function it should convert it to string.': function () {
+      let joinReturnedValue = join([function () { }]);
+      eq(typeof joinReturnedValue === 'string', true);
+      eq(joinReturnedValue === 'function () { }', true);
+
+    },
+
+    '4. If array element is an object it should convert it to string.': function () {
+      let joinReturnedValue = join([{ a: 'a' }]);
+      eq(typeof joinReturnedValue === 'string', true);
+      eq(joinReturnedValue === '[object Object]', true);
+
+    },
+
+    '5. If separator is provided, it should convert it to string and and separate each array element with the separator provided.': function () {
+      let joinReturnedValue = join([25, 30, 40], '-');
+      console.log(joinReturnedValue)
+      eq(typeof joinReturnedValue === 'string', true);
+      eq(joinReturnedValue, '25-30-40');
+
+    },
+
+    '6. If separator is an empty string, all elements are joined without any characters in between them': function () {
+      let joinReturnedValue = join([25, 30, 40], ' ');
+      eq(typeof joinReturnedValue === 'string', true);
+      eq(joinReturnedValue, '25 30 40');
+
+    },
+
+    '7. If array length is 0 , return an empty string.': function () {
+      let joinReturnedValue = join([]);
+      eq(joinReturnedValue === '', true);
+
+    },
+
+    '8. If array element is undefined or null, return an empty string.': function () {
+      let joinReturnedValue = join([undefined, 1, , null, 2, 3, , ,]);
+      console.log(joinReturnedValue)
+      eq(joinReturnedValue, ',1,,,2,3,,,')
+
+    },
+
+
+  });
+</script>

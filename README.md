@@ -24,13 +24,13 @@ Accessors:
 -   [x] Array.prototype.concat()
 -   [x] Array.prototype.indexOf()
 -   [x] Array.prototype.lastIndexOf()
--   [] Array.prototype.includes()
--   [] Array.prototype.slice()
--   [] Array.prototype.join()
+-   [x] Array.prototype.includes()
+-   [x] Array.prototype.slice()
+-   [x] Array.prototype.join()
 
 Mutators
 
--   [] Array.prototype.push()
+-   [x] Array.prototype.push()
 -   [] Array.prototype.pop()
 -   [] Array.prototype.shift()
 -   [] Array.prototype.unshift()

@@ -1,0 +1,83 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+  // Main Objective
+
+  // The push() method adds one or more elements to the end of an array and returns the new length of the array.
+
+  // Prototype function 
+
+  //   function push(array) {
+  // 	let arrayLength = array.length - 1;
+  // 	for (let i = 1; i < arguments.length; i++, arrayLength++) {
+  // 		array[array.length] = arguments[i];
+  // 	}
+  // 	return array.length;
+  // }
+
+  // Function signature 
+  // push(array, elements1[, ...[, elementN]]);
+
+  // Function Parameters  
+  // elementN -> the elements to add to the end of the array
+
+  // Return value 
+  // The new length property of the object upon which the method was called.
+
+
+  // If the length property cannot be converted into a number, the index used is 0. 
+  // This includes the possibility of length being nonexistent, in which case length will also be created.
+  // It should accept one or more arguments and append them to the end of the array
+  // It should return the new length of the array.
+  // 
+
+  // Requirements 
+
+  // 1. It should return the length of the array provided.
+  // 2. It should accept an argument and append them to the end of the array.
+  // 3. It should accept more than one argument and append them to the end of the array.
+  // 4. If the length property cannot be converted into a number, the index used is 0.
+
+
+  function push(array) {
+    let arrayIndexToStart = array.length;
+
+
+    for (let i = 1; i < arguments.length; i++ , arrayIndexToStart++) {
+      array[arrayIndexToStart] = arguments[i];
+    }
+
+    return arrayIndexToStart;
+  }
+
+
+  tests({
+
+    '1. It should return the length of the array provided.': function() {
+
+      let pushReturnedValue = push([1, 2, 3]);
+      eq(pushReturnedValue, 3);
+    },
+
+    '2. It should accept an argument and append them to the end of the array.': function() {
+      let testArray = [1, 2, 3];
+      let pushReturnedValue = push(testArray, 4);
+
+      eq(pushReturnedValue, 4);
+      eq(testArray[3], 4);
+
+    },
+
+    '3. It should accept more than one argument and append them to the end of the array.': function() {
+      let testArray = [1, 2, 3];
+      let pushReturnedValue = push(testArray, 4, 5, 6);
+
+      eq(pushReturnedValue, 6);
+      eq(testArray[3], 4);
+      eq(testArray[4], 5);
+      eq(testArray[5], 6);
+    },
+
+
+  });
+</script>
