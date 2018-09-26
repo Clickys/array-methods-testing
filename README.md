@@ -31,8 +31,8 @@ Accessors:
 Mutators
 
 -   [x] Array.prototype.push()
--   [] Array.prototype.pop()
--   [] Array.prototype.shift()
+-   [x] Array.prototype.pop()
+-   [x] Array.prototype.shift()
 -   [] Array.prototype.unshift()
 -   [] Array.prototype.fill()
 -   [] Array.prototype.reverse()
