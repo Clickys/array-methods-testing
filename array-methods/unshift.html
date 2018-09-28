@@ -1,0 +1,86 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+  // Main Objective
+  // The unshift() method adds one or more elements to the beginning of an array and returns the new length of the array.
+
+  // Function signature 
+  // unshift(array, element1[,...[, elementN]]);
+
+  // Function Parameters 
+  // elementN -> the elements to add to the front of the array.
+
+  // Return value 
+  // The new length property of the array upon which the method was called.
+
+  // Requirements 
+
+  // 1. It should return the length of the array provided.
+  // 2. It should accept an argument and append them to the front of the array.
+  // 3. It should accept more than one argument and append them to the front of the array.
+
+  function unshift(array) {
+    let copiedArray = [];
+    let unshiftArray = [];
+    let unshiftArrayLength;
+    let j = 0, i = 0;
+
+
+    for (let i = 0; i < array.length; i++) {
+      copiedArray[i] = array[i];
+    }
+
+    if (arguments.length > 1) {
+      for (i = 1, j; i < arguments.length; i++ , j++) {
+        unshiftArray[j] = arguments[i];
+      }
+
+      unshiftArrayLength = unshiftArray.length;
+
+      for (i = unshiftArray.length, j = 0; i < unshiftArrayLength + copiedArray.length; i++ , j++) {
+        unshiftArray[i] = copiedArray[j];
+      }
+      for (i = 0; i < unshiftArray.length; i++) {
+        array[i] = unshiftArray[i];
+      }
+    }
+
+    return array.length;
+  }
+
+  tests({
+
+    '1. It should return the length of the array provided.': function() {
+      let unshiftReturnedValue = unshift([1, 2, 3]);
+      eq(unshiftReturnedValue, 3);
+
+    },
+
+    '2. It should accept an argument and append them to the front of the array.': function() {
+      let testArray = [1, 2, 3];
+
+      unshift(testArray, 4);
+      eq(testArray.length === 4, true);
+      eq(testArray[0], 4);
+    },
+
+    '3. It should accept more than one argument and append them to the front of the array.': function() {
+      let testArray = [1, 2, 3];
+
+      unshift(testArray, 4, 5, 6, 7);
+      eq(testArray.length === 7, true);
+      eq(testArray[0], 4);
+      eq(testArray[1], 5);
+      eq(testArray[2], 6);
+      eq(testArray[3], 7);
+    },
+
+    'If no arguments provided it should return the length of the array being called upon.': function() {
+      let unshiftReturnedValue = unshift([]);
+      eq(unshiftReturnedValue, 0);
+    },
+
+
+
+  });
+</script>

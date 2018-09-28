@@ -1,0 +1,214 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+  // Main Objective
+  // The fill() method fills all the elements of an array from a start index to an end index with a static value. The end index is not included.
+
+  // Prototype function 
+  // function fill(array, value, startIndex = 0, endIndex = array.length) {
+  //   for (let i = startIndex; i < endIndex; i++) {
+  //     array[i] = value;
+  //   }
+  //   return array;
+  // }
+
+
+  // Function signature 
+  // fill(array, value, [, startIndex], [, endIndex])
+
+  // Function Parameters 
+  // value -> value to fill an array
+  // startIndex -> Optional startIndex default to 0.
+  // endIndex -> Optional endIndex default to array.length.
+
+  // Return value 
+  // The modified array.
+
+
+  // Requirements 
+
+  // 1. It should pass a value as first argument of the function and fill the array with the value.
+  // 2. It should have an optional startIndex which will fill the array from that index.
+  // 3. It should have an optional endIndex which will end the fill of the array not including the endIndex.
+  // 4. If startIndex is not provided it should start from index 0 as default.
+  // 5. If endIndex is not provided it should end the fill at array.length.
+  // 6. If startIndex is negative it should start from array.length + startIndex.
+  // 7. If startIndex is negative and array.length + startIndex is less than 0, it should start from 0.
+  // 8. If startIndex is greater than the array.length, it should start from not mutate the array.
+  // 9. If endIndex is greater than the array.length it should end at array.length.
+  // 10. If endIndex is negative it should end from array.length + start.
+  // 11. If endIndex is negative and array.length + startIndex is less than 0, it should start from 0.
+  // 12. It should mutate the array being called upon and return it.
+  // 13. If the argument is an object, it will copy the refererence and fill in the array with references to that object.
+
+  function fill(array, value, startIndex = 0, endIndex = array.length) {
+
+    if (startIndex < 0) {
+      startIndex = array.length + startIndex;
+
+      if (startIndex < 0) {
+        startIndex = 0;
+      }
+    }
+
+    if (endIndex > array.length) {
+      endIndex = array.length;
+    }
+
+    if (endIndex < 0) {
+      endIndex = array.length + endIndex;
+    }
+
+    for (let i = startIndex; i < endIndex; i++) {
+      array[i] = value;
+    }
+
+    return array;
+  }
+
+  tests({
+
+    '1. It should pass a value as first argument of the function and fill the array with the value.': function() {
+      let testArray = [1, 2, 3]
+
+      fill(testArray, 4);
+
+      eq(testArray[0], 4);
+      eq(testArray[1], 4);
+      eq(testArray[2], 4);
+    },
+
+    '2. It should have an optional startIndex which will fill the array from that index.': function() {
+      let testArray = [1, 2, 3, 4, 5];
+
+      fill(testArray, 10, 2);
+
+      eq(testArray[0], 1);
+      eq(testArray[1], 2);
+      eq(testArray[2], 10);
+      eq(testArray[3], 10);
+      eq(testArray[4], 10);
+    },
+
+    '3. It should have an optional endIndex which will end the fill of the array not including the endIndex.': function() {
+      let testArray = [1, 2, 3];
+
+      fill(testArray, 15, 0, 1);
+
+      eq(testArray[0], 15);
+      eq(testArray[1], 2);
+
+
+    },
+
+    '4. If startIndex is not provided it should start from index 0 as default.': function() {
+      let testArray = [1, 2];
+
+      fill(testArray, 100);
+
+      eq(testArray[0] === 100, true);
+    },
+
+    '5. If endIndex is not provided it should end the fill at array.length.': function() {
+      let testArray = [1, 2, 3, 4];
+
+      fill(testArray, 100, 1);
+
+      eq(testArray[3], 100);
+      eq(testArray[1], 100);
+    },
+
+    '6. If startIndex is negative it should start from array.length + startIndex.': function() {
+      let testArray = [1, 2, 3, 4, 5, 6, 7, 8];
+
+      fill(testArray, 30, -4);
+
+      eq(testArray[3] !== 30, true);
+      eq(testArray[4], 30);
+      eq(testArray[5], 30);
+      eq(testArray[6], 30);
+      eq(testArray[7], 30);
+    },
+    '7. If startIndex is negative and array.length + startIndex is less than 0, it should start from 0.': function() {
+      let testArray = [1, 2, 3];
+
+      fill(testArray, 10, -50);
+
+      eq(testArray.length, 3);
+      eq(testArray[0], 10);
+      eq(testArray[1], 10);
+      eq(testArray[2], 10);
+
+    },
+
+    '8. If startIndex is greater than the array.length, it should start from not mutate the array.': function() {
+      let testArray = [1, 2, 3];
+
+      fill(testArray, 10, 50);
+
+      eq(testArray.length, 3);
+      eq(testArray[0], 1);
+      eq(testArray[1], 2);
+      eq(testArray[2], 3);
+
+    },
+
+    '9. If endIndex is greater than the array.length it should end at array.length.': function() {
+      let testArray = [1, 2, 3, 4, 5, 6, 7, 8];
+      fill(testArray, 80, 0, 40);
+
+      eq(testArray.length, 8);
+      eq(testArray[0], 80);
+      eq(testArray[7], 80);
+
+    },
+
+    '10. If endIndex is negative it should end from array.length + start.': function() {
+      let testArray = [1, 2, 3, 4, 5, 6, 7, 8];
+
+      fill(testArray, 80, 3, -4);
+
+      eq(testArray.indexOf(80), 3);
+      eq(testArray[4] !== 80, true);
+    },
+
+
+    '11. If endIndex is negative and array.length + startIndex is less than 0, it should start from 0.': function() {
+      let testArray = [1, 2, 3];
+
+      fill(testArray, 10, -50);
+
+      eq(testArray.length, 3);
+      eq(testArray[0], 10);
+      eq(testArray[1], 10);
+      eq(testArray[2], 10);
+
+    },
+
+    '12. It should mutate the array being called upon and return it.': function() {
+      let testArray = [1, 2, 3];
+
+      let fillReturnedArray = fill(testArray, 1);
+
+      eq(testArray[0], 1);
+      eq(testArray[1], 1);
+      eq(testArray[2], 1);
+    },
+
+    '13. If the argument is an object, it will copy the refererence and fill in the array with references to that object.': function() {
+      let testArray = [1, 2, 3];
+      let testObj = {
+        a: 'Property a',
+        b: 'Property b',
+      }
+
+      fill(testArray, testObj);
+      testArray[0].a = 'Changed Property';
+      eq(testArray[1].a, 'Changed Property');
+      eq(testArray[2].a, 'Changed Property');
+    },
+
+
+
+  });
+</script>
