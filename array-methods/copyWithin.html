@@ -1,0 +1,199 @@
+<script src="../tinytest.js"></script>
+<script>
+    'use strict'
+    // Main Objective
+    // The copyWithin() method shallow copies part of an array to another location in the same array and returns it, without modifying its size.
+
+    // Function Parameters 
+    // positionToStart -> zero based index at which to copy the sequence to
+    // startCopyingIndex -> Zero based index at which to start copying elements from.
+    // endCopyingIndex -> Zero based index at which to end copying elements from. copyWithin copies up to but not including end.
+
+    // Function signature 
+    // copyWithin(array, target, [, startCopyingIndex], [, endCopyingIndex])
+
+    // Return value 
+    // The modified array.
+
+    // Requirements 
+    // 1. It should return the array being called upon modified/or not.
+    // 2. It should have a target as first argument which point which position to copy the sequence to, and return the array.
+    // 3. If targetIndex is negative it should counted from the end. ( array.length + target ).
+    // 4. If target is greater than array.length , nothing will be copied.
+    // 5. It should have an optional startCopyingIndex, if provided it should start copying elements from that index.
+    // 6. If positionToStart is positioned after startCopyingIndex, the copied sequence will be trimmed to fit to array.length.
+    // 7. If startCopyingIndex is negative it should counted from the end( array.length + startCopyingIndex).
+    // 8. If startCopyingIndex is not provided it should start from 0 as default
+    // 9. It should have an optional endCopyingIndex, at which to end copying elements, not including endCopyingIndex.
+    // 10. If endCopyingIndex is negative , it should counted from the end (array.length + endCopyingIndex).
+    // 11. If endCopyingIndex is not provided, it should be array.length.
+
+
+    function copyWithin(array, positionToStart, startCopyingIndex = 0, endCopyingIndex = array.length) {
+        let copyWithinArray = [];
+
+        if (startCopyingIndex < 0) { // if start copy index is negative
+            startCopyingIndex = array.length + startCopyingIndex;
+        }
+
+        if (endCopyingIndex < 0) {
+            endCopyingIndex = array.length + endCopyingIndex;
+        }
+
+        for (let i = startCopyingIndex; i < endCopyingIndex; i++) {
+            copyWithinArray.push(array[i]);
+        }
+
+        if (positionToStart < 0) { // if position to start is negative
+            positionToStart = array.length + positionToStart;
+        }
+
+        for (let j = 0, i = positionToStart; i < array.length; i++ , j++) {
+            if (j in copyWithinArray === false) {
+                break;
+            }
+            array[i] = copyWithinArray[j];
+        }
+
+        return array;
+    }
+
+    tests({
+
+        '1. It should return the array being called upon modified/or not.': function () {
+            let copyWithinReturnedValue = copyWithin([1, 2, 3]);
+            eq(Array.isArray(copyWithinReturnedValue), true);
+        },
+
+        '2. It should have a positionToStart as first argument which point which position to copy the sequence to, and return the array.': function () {
+            let copyWithinReturnedValue = copyWithin([1, 2, 3], 1);
+            let copyWithinReturnedValue1 = copyWithin([1, 2, 3], 2);
+            let copyWithinReturnedValue2 = copyWithin([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 10);
+
+            eq(copyWithinReturnedValue[0], 1);
+            eq(copyWithinReturnedValue[1], 1);
+            eq(copyWithinReturnedValue[2], 2);
+
+            eq(copyWithinReturnedValue1[0], 1);
+            eq(copyWithinReturnedValue1[1], 2);
+            eq(copyWithinReturnedValue1[2], 1);
+
+            eq(copyWithinReturnedValue2[10], 1);
+            eq(copyWithinReturnedValue2[11], 2);
+        },
+        '3. If positionToStart is negative it should counted from the end. ( array.length + positionToStart ).': function () {
+            let copyWithinReturnedValue = copyWithin([1, 2, 3], -2);
+
+            eq(copyWithinReturnedValue[1], 1);
+            eq(copyWithinReturnedValue[2], 2);
+        },
+        '4. If target is greater than array.length , nothing will be copied.': function () {
+            let copyWithinReturnedValue = copyWithin([1, 2, 3], 10);
+
+            eq(copyWithinReturnedValue[0], 1);
+            eq(copyWithinReturnedValue[1], 2);
+            eq(copyWithinReturnedValue[2], 3);
+        },
+        '5. It should have an optional startCopyingIndex, if provided it should start copying elements from that index.': function () {
+            let copyWithinReturnedValue = copyWithin([1, 2, 3, 4], 0, 1); // positionElementToStart = 1 startCopyingElements = 2
+            let copyWithinReturnedValue2 = copyWithin([1, 2, 3, 4], 3, 2); // positionElementToStart = 4 startCopyingElements = 3
+            let copyWithinReturnedValue3 = copyWithin([1, 2, 3, 4], 3, 3); // positionElementToStart = 4 startCopyingElements = 3
+            let copyWithinReturnedValue4 = copyWithin([1, 2, 3, 4], 2, 3); // positionElementToStart = 3 startCopyingElements = 4
+
+            eq(copyWithinReturnedValue.length, 4);
+            eq(copyWithinReturnedValue[0], 2)
+            eq(copyWithinReturnedValue[1], 3)
+            eq(copyWithinReturnedValue[2], 4)
+            eq(copyWithinReturnedValue[3], 4)
+
+            eq(copyWithinReturnedValue2.length, 4);
+            eq(copyWithinReturnedValue2[0], 1);
+            eq(copyWithinReturnedValue2[1], 2);
+            eq(copyWithinReturnedValue2[2], 3);
+            eq(copyWithinReturnedValue2[3], 3);
+
+            eq(copyWithinReturnedValue3.length, 4);
+            eq(copyWithinReturnedValue3[0], 1);
+            eq(copyWithinReturnedValue3[1], 2);
+            eq(copyWithinReturnedValue3[2], 3);
+            eq(copyWithinReturnedValue3[3], 4);
+
+            eq(copyWithinReturnedValue4[0], 1);
+            eq(copyWithinReturnedValue4[1], 2);
+            eq(copyWithinReturnedValue4[2], 4);
+            eq(copyWithinReturnedValue4[3], 4);
+
+        },
+        '6. If positionToStart is positioned after startCopyingIndex, the copied sequence will be trimmed to fit to array.length.': function () {
+            let copyWithinReturnedValue = copyWithin([1, 2, 3, 4], 2, 1);  // positionElementToStart = 3 startCopyingElements = 2
+            let copyWithinReturnedValue1 = copyWithin([1, 2, 3, 4], 2, 0); // positionElementToStart = 3 startCopyingElements = 1
+
+            eq(copyWithinReturnedValue.length, 4);
+            eq(copyWithinReturnedValue[2], 2);
+            eq(copyWithinReturnedValue[3], 3);
+
+
+            eq(copyWithinReturnedValue1.length, 4)
+            eq(copyWithinReturnedValue1[0], 1)
+            eq(copyWithinReturnedValue1[1], 2)
+            eq(copyWithinReturnedValue1[2], 1)
+            eq(copyWithinReturnedValue1[3], 2)
+
+        },
+        '7. If startCopyingIndex is negative it should counted from the end( array.length + startCopyingIndex).': function () {
+            let copyWithinReturnedValue = copyWithin([1, 2, 3, 4], 1, -2); // positionElementToStart = 1 startCopyingElements = 3
+
+            eq(copyWithinReturnedValue.length, 4);
+            eq(copyWithinReturnedValue[0], 1);
+            eq(copyWithinReturnedValue[1], 3);
+            eq(copyWithinReturnedValue[2], 4);
+            eq(copyWithinReturnedValue[3], 4);
+        },
+        '8. If startCopyingIndex is not provided it should start from 0 as default.': function () {
+            let copyWithinReturnedValue = copyWithin([1, 1, 2, 2], 2);
+
+            eq(copyWithinReturnedValue[2], 1)
+            eq(copyWithinReturnedValue[3], 1)
+        },
+        '9. It should have an optional endCopyingIndex, at which to end copying elements, not including endCopyingIndex.': function () {
+            let copyWithinReturnedValue = copyWithin([1, 2, 3, 4], 1, 2, 3);
+            let copyWithinReturnedValue1 = copyWithin([1, 2, 3, 4], 0, 1, 3); // [2, 3, 3, 4]
+
+            eq(copyWithinReturnedValue[1], 3);
+
+            eq(copyWithinReturnedValue1[0], 2);
+            eq(copyWithinReturnedValue1[1], 3);
+            eq(copyWithinReturnedValue1[2], 3);
+            eq(copyWithinReturnedValue1[3], 4);
+        },
+        '10. If endCopyingIndex is negative , it should counted from the end (array.length + endCopyingIndex).': function () {
+            let copyWithinReturnedValue = copyWithin([1, 2, 3, 4], 1, 2, -1);
+            let copyWithinReturnedValue1 = copyWithin([1, 2, 3, 4], 0, 1, -2);
+            let copyWithinReturnedValue2 = copyWithin([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 1, 3, -2); // [1, 4, 5, 6, 7, 8, 7, 8, 9, 10]
+
+            eq(copyWithinReturnedValue[1], 3);
+            eq(copyWithinReturnedValue1[0], 2);
+
+            eq(copyWithinReturnedValue2[1], 4);
+            eq(copyWithinReturnedValue2[2], 5);
+            eq(copyWithinReturnedValue2[3], 6);
+            eq(copyWithinReturnedValue2[4], 7);
+            eq(copyWithinReturnedValue2[5], 8);
+            eq(copyWithinReturnedValue2[6], 7);
+            eq(copyWithinReturnedValue2[7], 8);
+            eq(copyWithinReturnedValue2[8], 9);
+            eq(copyWithinReturnedValue2[9], 10);
+        },
+        '11. If endCopyingIndex is not provided, it should be array.length.': function () {
+            let copyWithinReturnedValue = copyWithin([1, 2, 3, 4], 1, 2); // [1, 3, 4, 4];
+
+            eq(copyWithinReturnedValue[1], 3)
+            eq(copyWithinReturnedValue[2], 4)
+            eq(copyWithinReturnedValue[3], 4)
+        },
+
+
+
+
+    });
+</script>
