@@ -1,0 +1,79 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+  // Main Objective
+  // The reverse() method reverses an array in place. The first array element becomes the last, and the last array element becomes the first.
+
+  // Prototype function 
+  // function reverse(array) {
+  //   let copyArray = [];
+  //   let i = 0,
+  //     j = 0;
+
+  //   for (let i = 0; i < array.length; i++) {
+  //     copyArray[i] = array[i];
+  //   }
+
+  //   for (i, j = copyArray.length - 1; i < array.length; i++ , j--) {
+  //     array[i] = copyArray[j];
+  //   }
+
+  //   return array;
+  // }
+
+  // Function signature
+  // reverse(array)
+
+  // Function Parameters 
+  // none
+
+  // Return value 
+  // The reversed array.
+
+  function reverse(array) {
+    let copyArray = [];
+    let j = array.length - 1;
+    let i = 0;
+
+    for (let i = 0; i < array.length; i++) {
+      copyArray[i] = array[i];
+    }
+
+    for (; i < array.length; i++ , j--) {
+      array[i] = copyArray[j];
+    }
+
+    return array;
+  }
+
+  // Requirements 
+
+  // 1. It should return  an array.
+  // 2. It should mutate the array and return it in reverse order.
+
+
+
+
+  tests({
+
+    '1. It should return  an array.': function () {
+      let testArray = [1, 2, 3];
+      let reverseReturnedValue = reverse(testArray);
+
+      eq(Array.isArray(reverseReturnedValue), true);
+    },
+
+    'It should mutate the array and return it in reverse order.': function () {
+      let testArray = [1, 2, 3];
+      let reverseReturnedValue = reverse(testArray);
+
+      eq(testArray[0] !== 1, true);
+      eq(testArray[0], 3);
+      eq(testArray[1], 2);
+      eq(testArray[2], 1);
+    },
+
+
+
+  });
+</script>
