@@ -1,0 +1,191 @@
+<script src="../tinytest.js"></script>
+<script>
+  'use strict'
+  // Main Objective
+  // The sort() method sorts the elements of an array in place and returns the array. 
+
+  // Prototype function 
+
+  // Function signature
+  // sort(array, compareFn);
+
+  // Function Parameters 
+  // compareFn -> Specifies a function that defines the sort order. If omitted, the array is sorted according to each character's Unicode code point value, according to the string conversion of each element.
+
+  // Return value 
+  // The sorted array. Note that the array is sorted in place, and no copy is made.
+
+  // Requirements 
+
+  // 1. It should return an array.
+  // 2. If no compare function provided it should compare each array element and return the sorted array assume that all elements are strings.
+  // 3. If no compare function provided it should convert each array element to string and compare them and return the sorted array.
+  // 4. It should sort all the undefined elements to the end of the array.
+  // 5. If compareFunction is provided it should compare two given array elements and sort them accordingly
+  // 6. It should sort all undefined elements to the end of the array.
+  // 7. It does not run the callback function on undefined elements.
+
+  function sort(array, compareFn) {
+    let arrayLength = array.length;
+
+
+    // If no compare function provided
+    if (arguments.length < 2) {
+
+
+      for (let i = 0; i < arrayLength; i++) {
+        for (let j = i + 1; j < array.length; j++) {
+          if (array[i] === undefined) {
+            let temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+          }
+
+          if (String(array[i]) > String(array[j])) {
+            let temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+
+          } else {
+            continue;
+          }
+        }
+      }
+    } else {
+
+      for (let i = 0; i < arrayLength; i++) {
+        for (let j = i + 1; j < arrayLength; j++) {
+          if (array[i] === undefined) {
+            let temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+          }
+        }
+      }
+
+      for (let i = 0; i < arrayLength; i++) {
+        if (array[i] === undefined) {
+          continue
+        }
+        for (let j = i + 1; j < array.length; j++) {
+          if (array[j] === undefined) {
+            continue;
+          }
+          if (compareFn(array[i], array[j]) > 0) {
+            let temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+          }
+        }
+      }
+
+    }
+
+
+
+
+    return array;
+  }
+
+  tests({
+
+    '1. It should return an array.': function () {
+      let sortedReturnValue = sort([1, 2, 3]);
+    },
+
+    '2. If no compare function provided it should compare each array element and return the sorted array assume that all elements are strings.': function () {
+      let testArray = ['March', 'Jan', 'Feb', 'Dec'];
+
+
+      let sortedReturnValue = sort(testArray);
+
+
+      // expected output: Array ["Dec", "Feb", "Jan", "March"]
+      eq(testArray[0], 'Dec');
+      eq(testArray[1], 'Feb');
+      eq(testArray[2], 'Jan');
+      eq(testArray[3], 'March');
+
+
+    },
+
+    '3. If no compare function provided it should convert each array element to string and compare them and return the sorted array. ': function () {
+      let testArray = [55, 10, 2, 3, 11, 19, 44, 100];
+      /// [10, 100, 11, 19, 2, 3, 44, 55]
+
+      sort(testArray);
+      eq(testArray[0], 10);
+      eq(testArray[1], 100);
+      eq(testArray[2], 11);
+      eq(testArray[3], 19);
+      eq(testArray[4], 2);
+      eq(testArray[5], 3);
+      eq(testArray[6], 44);
+      eq(testArray[7], 55);
+
+    },
+
+    '4. It should sort all the undefined elements to the end of the array.': function () {
+      let testArray = [undefined, 1, 3];
+
+      sort(testArray);
+      eq(testArray[0], 1);
+      eq(testArray[1], 3);
+      eq(testArray[2], undefined);
+    },
+
+
+    '5. If compareFunction is provided it should compare two given array elements and sort them accordingly': function () {
+      let testArray = [1, 2, 3];
+      let testArray1 = [3, 2, 4, 1];
+      sort(testArray, function (a, b) {
+        return b - a;
+      })
+
+      sort(testArray1, function (a, b) {
+        return a - b;
+      })
+
+      eq(testArray[0], 3);
+      eq(testArray[1], 2);
+      eq(testArray[2], 1);
+
+      eq(testArray1[0], 1)
+      eq(testArray1[1], 2)
+      eq(testArray1[2], 3)
+      eq(testArray1[3], 4)
+    },
+
+    '6. It should sort all undefined elements to the end of the array.': function () {
+      let testArray = [undefined, 1, 3, 2, undefined, 4];
+      let supposeArray = [1, 2, 3, 4, undefined, undefined];
+
+      sort(testArray, function (a, b) {
+        return a - b;
+      })
+
+      sort(testArray, function (a, b) {
+        return a - b;
+      })
+
+      supposeArray.forEach(function (e, i) {
+        eq(testArray[i], e);
+      })
+    },
+
+    '7. It does not run the callback function on undefined elements.': function () {
+      let testArray = [undefined, 1, 2, undefined, 3];
+      let callbackFnHasRun = 0;
+      sort(testArray, function (a, b) {
+        callbackFnHasRun++;
+        return a - b;
+      })
+
+      eq(callbackFnHasRun, 3);
+
+    },
+
+
+
+  });
+</script>
